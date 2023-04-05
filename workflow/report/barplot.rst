@@ -1,0 +1,3 @@
+Bar charts::
+
+    Barplots showing variable distribution by ....

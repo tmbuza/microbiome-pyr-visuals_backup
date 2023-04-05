@@ -1,0 +1,30 @@
+from snakemake.utils import min_version
+
+min_version("6.10.0")
+
+# Configuration file containing all user-specified settings
+configfile: "config/config.yml"
+
+report: "report/workflow.rst"
+
+
+include: "rules/qiime2_viz.smk"
+include: "rules/rmd_report.smk"
+
+
+rule all:
+	input:
+		"figures/venn_metadata_shannon.svg",
+		"figures/shannon_by_time.svg",
+
+		# "data/q2_phyloseq.rds",
+
+		# "data/feature_table.qza",
+		# "data/sample_metadata.tsv",
+		# "data/taxonomy.qza",
+		# "data/rooted_tree.qza",
+		# "data/shannon_vector.qza",
+
+
+
+		"index.html",
