@@ -1,24 +1,12 @@
-
 source("workflow/scripts/common.R")
+source("workflow/scripts/qiime2R.R")
+
 library(tidyverse)
-# library(qiime2R)
-# 
-# read_q2metadata("data/sample_metadata.tsv") %>% 
-#   rename("sample_id"=1) %>% 
-#   write_csv("data/metadata.csv")
-# 
-# read_qza("data/shannon_vector.qza")$data %>% 
-#   tibble::rownames_to_column("sample_id") %>% 
-#   write_csv("data/shannon.csv")
+
 
 metadata <- read_csv("data/metadata.csv", show_col_types = FALSE)
 shannon <- read_csv("data/shannon.csv", show_col_types = FALSE)
 
-# Alpha Diversity
-
-##  Venn diagram
-
-# Quick glimpse
 
 gplots::venn(list(Metadata=metadata$sample_id, Shannon=shannon$sample_id))
 
@@ -27,8 +15,8 @@ my_venn <- venn.diagram(x=list(metadata$sample_id, shannon$sample_id),
                         filename = NULL, 
                         fill=c("red", "green"), 
                         alpha=c(0.8,0.8),
-                        euler.d = TRUE,
-                        scaled = TRUE,
+                        euler.d = FALSE,
+                        scaled = FALSE,
                         cat.fontfamily = "sans",
                         cat.cex = 1,
                         lwd = c(0, 0),

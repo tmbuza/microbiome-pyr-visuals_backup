@@ -1,7 +1,7 @@
 ---
 title:  "<big><u>IMAP-PART 09</u></big><br><br>Multi-Dimensional Data Visualization with integrated tools and Snakemake workflow<br><br>"
 subtitle: |
-  | ![](images/ml.png)<br>
+  | ![](images/vizcover.png)<br>
   | Fostering Reproducible Microbiome data visualization with Snakemake workflow
 date:
 - IMAP-PART 09<br>[Latest GitHub-Repo](https://github.com/tmbuza/imap-data-visualization/)<br>
@@ -131,6 +131,10 @@ cat results/project_tree.txt
 ```
 
 <br>
+
+```{bash}
+bash workflow/scripts/smk_html_report.sh
+```
 
 ![](images/smkreport/screenshot.png)
 

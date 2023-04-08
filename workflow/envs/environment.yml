@@ -27,3 +27,9 @@ dependencies:
   - q2-vsearch =2023.2.0
   - html2image
   - pip =23.0.1
+  - r-ape
+  - bioconductor-biostrings
+  - bioconductor-biomformat
+  - bioconductor-phyloseq
+  - bioconductor-rhdf5
+  - yaml

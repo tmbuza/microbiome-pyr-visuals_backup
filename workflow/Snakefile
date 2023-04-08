@@ -14,17 +14,22 @@ include: "rules/rmd_report.smk"
 
 rule all:
 	input:
-		"figures/venn_metadata_shannon.svg",
-		"figures/shannon_by_time.svg",
-
-		# "data/q2_phyloseq.rds",
-
-		# "data/feature_table.qza",
-		# "data/sample_metadata.tsv",
-		# "data/taxonomy.qza",
-		# "data/rooted_tree.qza",
-		# "data/shannon_vector.qza",
-
-
-
 		"index.html",
+
+		# "data/features.csv",
+        # "data/metadata.csv",
+        # "data/taxonomy.csv",
+        # "data/shannon.csv",
+
+        # "resources/feature_table.qza",
+        # "resources/sample_metadata.tsv",
+        # "resources/taxonomy.qza",
+        # "resources/rooted_tree.qza",
+        # "resources/shannon_vector.qza",
+
+		"data/q2_ps.rds",
+
+		"figures/venn_metadata_shannon.svg",
+		"figures/line_shannon_by_time.svg",
+
+
