@@ -252,7 +252,7 @@ summarize_taxa <- function(features, taxonomy) {
             select(FeatureID, Taxon)
         ) %>%
         group_by(SampleID, Taxon) %>%
-        summarize(Counts=sum(Counts)) %>%
+        summarise(Counts=sum(Counts)) %>%
         ungroup() %>%
         spread(key=SampleID, value=Counts) %>%
         as.data.frame() %>%
@@ -545,7 +545,7 @@ taxa_heatmap<-function(features, metadata, category, normalize, ntoplot){
 
 theme_q2r<- function () { 
   theme_classic(base_size=8, base_family="Helvetica") +
-  theme(panel.border = element_rect(color="black", size=1, fill=NA)) +
+  theme(panel.border = linewidth(color="black", size=1, fill=NA)) +
   theme(axis.line = element_blank(), strip.background = element_blank())
 }
 

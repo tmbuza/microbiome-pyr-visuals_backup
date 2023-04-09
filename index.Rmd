@@ -84,7 +84,6 @@ head(taxonomy)
 
 ```
 
-
 <br><hr width=100%><br>
 
 ## Related work

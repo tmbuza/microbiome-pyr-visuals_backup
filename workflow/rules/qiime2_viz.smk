@@ -52,23 +52,51 @@ rule convert_qiime2csv:
     script:
         "../scripts/convert_qiime2csv.R"
 
-rule venn_metadata_shannon:
+rule venn_diagram:
     input:
         "data/metadata.csv",
         "data/shannon.csv",
     output:
-        report("figures/venn_metadata_shannon.svg", caption="../report/shannon_metadata_venn.rst", category="Shannon_Metadata Venn"),
+        report("figures/venndiagram.svg", caption="../report/venndiagram.rst", category="VennDiagram"),
     script:
-        "../scripts/plot_venn_metadata_shannon.R"
+        "../scripts/venndiagram.R"
 
 
-rule lineplot_shannon_diversity:
+rule line_point_plot:
     input:
-        "data/metadata.csv",
-        "data/shannon.csv",
+        demo=rules.import_demo_qiime2_data.output,
     output:
-        report("figures/line_shannon_by_time.svg", caption="../report/shannon_time_diversity.rst", category="Shannon diversity"),
+        report("figures/lineplot.svg", caption="../report/lineplot.rst", category="LinePlot"),
     script:
-        "../scripts/plot_shannon_diversity.R"
+        "../scripts/lineplot.R"
+
+
+rule jitter_plot:
+    input:
+        demo=rules.import_demo_qiime2_data.output,
+    output:
+        report("figures/jitterplot.svg", caption="../report/jitterplot.rst", category="JitterPlot"),
+    script:
+        "../scripts/jitterplot.R"
+
+
+
+rule pcoa_ordination:
+    input:
+        demo=rules.import_demo_qiime2_data.output,
+    output:
+        report("figures/pcoa.svg", caption="../report/pcoa.rst", category="PCoA"),
+    script:
+        "../scripts/pcoa.R"
+
+
+
+rule heatmap_plot:
+    input:
+        demo=rules.import_demo_qiime2_data.output,
+    output:
+        report("figures/heatmap.svg", caption="../report/heatmap.rst", category="HeatMap"),
+    script:
+        "../scripts/heatmap.R"
 
 

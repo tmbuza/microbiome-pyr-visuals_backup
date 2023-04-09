@@ -29,7 +29,10 @@ rule all:
 
 		"data/q2_ps.rds",
 
-		"figures/venn_metadata_shannon.svg",
-		"figures/line_shannon_by_time.svg",
+		"figures/venndiagram.svg",
+		"figures/lineplot.svg",
+		"figures/jitterplot.svg",
+		"figures/pcoa.svg",
+		"figures/heatmap.svg",
 
 
