@@ -1,0 +1,1 @@
+Bar chart presenting variables grouped in class intervals.

@@ -459,7 +459,7 @@ taxa_barplot<-function(features, metadata, category, normalize, ntoplot){
         gather(-Taxon, key="SampleID", value="Abundance") %>%
         mutate(Taxon=if_else(Taxon %in% plotfeats, Taxon, "Remainder")) %>%
         group_by(Taxon, SampleID) %>%
-        summarize(Abundance=sum(Abundance)) %>%
+        summarise(Abundance=sum(Abundance)) %>%
         ungroup() %>%
         mutate(Taxon=factor(Taxon, levels=rev(c(plotfeats, "Remainder")))) %>%
         left_join(metadata)
@@ -542,10 +542,12 @@ taxa_heatmap<-function(features, metadata, category, normalize, ntoplot){
 # theme_q2r
 #------------------------------------
 
+element_line(size = 0.5, linetype = "solid",
+                                   colour = "black")
 
 theme_q2r<- function () { 
   theme_classic(base_size=8, base_family="Helvetica") +
-  theme(panel.border = linewidth(color="black", size=1, fill=NA)) +
+  # theme(panel.border = element_rect(color="black", size=1, fill=NA)) +
   theme(axis.line = element_blank(), strip.background = element_blank())
 }
 

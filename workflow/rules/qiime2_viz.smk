@@ -7,7 +7,7 @@ rule import_qiime2_data:
     conda:
         "../envs/environment.yml"
     script:
-        "../scripts/import_qiime2_data.R"
+        "../scripts/importdata.R"
         
 
 rule import_demo_qiime2_data:
@@ -20,7 +20,7 @@ rule import_demo_qiime2_data:
     conda:
         "../envs/environment.yml"
     script:
-        "../scripts/import_qiime2_data.R"
+        "../scripts/importdata.R"
 
 
 
@@ -33,7 +33,7 @@ rule qiime2_phyloseq_object:
     conda:
         "../envs/environment.yml"
     script:
-        "../scripts/qiime2_phyloseq_object.R"
+        "../scripts/phyloseqobject.R"
 
 
 rule convert_qiime2csv:
@@ -50,7 +50,7 @@ rule convert_qiime2csv:
     conda:
         "../envs/environment.yml"
     script:
-        "../scripts/convert_qiime2csv.R"
+        "../scripts/qiime2csv.R"
 
 rule venn_diagram:
     input:
@@ -98,5 +98,15 @@ rule heatmap_plot:
         report("figures/heatmap.svg", caption="../report/heatmap.rst", category="HeatMap"),
     script:
         "../scripts/heatmap.R"
+
+
+
+rule taxa_barplot:
+    input:
+        demo=rules.import_demo_qiime2_data.output,
+    output:
+        report("figures/barplot.svg", caption="../report/barplot.rst", category="Taxa Barplot"),
+    script:
+        "../scripts/barplot.R"
 
 

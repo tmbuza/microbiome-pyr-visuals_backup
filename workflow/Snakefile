@@ -34,5 +34,6 @@ rule all:
 		"figures/jitterplot.svg",
 		"figures/pcoa.svg",
 		"figures/heatmap.svg",
+		"figures/barplot.svg",
 
 
