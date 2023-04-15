@@ -464,7 +464,7 @@ taxa_barplot<-function(features, metadata, category, normalize, ntoplot){
         mutate(Taxon=factor(Taxon, levels=rev(c(plotfeats, "Remainder")))) %>%
         left_join(metadata)
     ))
-  
+  g
   
   bplot<-
     ggplot(fplot, aes(x=SampleID, y=Abundance, fill=Taxon)) +
