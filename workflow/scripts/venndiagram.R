@@ -32,5 +32,5 @@ my_venn <- venn.diagram(x=list(metadata$sample_id, shannon$sample_id),
                         units = "in")
 
 # ggsave(my_venn, file="figures/venndiagram.pdf", width=6, height=6)
-ggsave(my_venn, file="figures/venndiagram.png", width=6, height=6)
-ggsave(my_venn, file="figures/venndiagram.svg", width=6, height=6)
+ggsave(my_venn, file="figures/q2r_venndiagram.png", width=6, height=6)
+ggsave(my_venn, file="figures/q2r_venndiagram.svg", width=6, height=6)

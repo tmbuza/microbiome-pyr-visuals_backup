@@ -1,28 +1,35 @@
+rule import_processed_data:
+    output:
+        rda="data/processed_data.rda"
+    conda:
+        "../envs/environment.yml"
+    script:
+        "../scripts/import_processed_data.R"
+        
+    
 rule visualize_processed_data:
     input:
-        rules.import_processed_data.output
+        rules.import_processed_data.output,
     output: 
         "visual_types/explore_n_visualize.Rmd"
     shell: 
-        "echo {output}"
+        "touch visual_types/explore_n_visualize.Rmd"
 
 
-rule heatmaps: 
+rule heatmaps:
     input:
         rules.visualize_processed_data.output
     output: 
-        "visual_types/heatmaps/{prefix}.Rmd",
-    run: 
-        """
-        echo {wildcards.prefix} > {output}
-        """
+        "visual_types/heatmaps/{prefix}.Rmd"
+    shell: 
+        "echo {wildcards.prefix} > {output}"
 
 
-rule hierarchical_clusters:
+rule clusters:
     input:
         rules.visualize_processed_data.output
     output: 
-        "visual_types/hclusters/{prefix}.Rmd"
+        "visual_types/clusters/{prefix}.Rmd"
     shell: 
         "echo {wildcards.prefix} > {output}"
 

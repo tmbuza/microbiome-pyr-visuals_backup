@@ -16,5 +16,5 @@ taxasums<-summarize_taxa(ASVs, taxonomy)$Genus
 taxa_heatmap(taxasums, metadata, "BodySite")
 
 # ggsave("figures/heatmap.pdf", height=4, width=8, device="pdf")
-ggsave("figures/heatmap.png", height=4, width=8, device="png")
-ggsave("figures/heatmap.svg", height=4, width=8, device="svg")
+ggsave("figures/q2r_heatmap.png", height=4, width=8, device="png")
+ggsave("figures/q2r_heatmap.svg", height=4, width=8, device="svg")

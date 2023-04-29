@@ -25,5 +25,5 @@ uwunifrac$data$Vectors %>%
   scale_color_discrete(name="Body Site")
 
 # ggsave("PCoA.pdf", height=4, width=5, device="pdf")
-ggsave("figures/pcoa.png", height=4, width=5, device="png")
-ggsave("figures/pcoa.svg", height=4, width=5, device="svg")
+ggsave("figures/q2r_pcoa.png", height=4, width=5, device="png")
+ggsave("figures/q2r_pcoa.svg", height=4, width=5, device="svg")

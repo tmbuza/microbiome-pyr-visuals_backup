@@ -8,32 +8,23 @@ configfile: "config/config.yml"
 report: "report/workflow.rst"
 
 
-include: "rules/qiime2_viz.smk"
+include: "rules/visual_types.smk"
+# include: "rules/.smk"
+# include: "rules/.smk"
+# include: "rules/.smk"
+# include: "rules/.smk"
 include: "rules/rmd_report.smk"
+
+report: "report/workflow.rst"
 
 
 rule all:
-	input:
-		"index.html",
-
-		# "data/features.csv",
-        # "data/metadata.csv",
-        # "data/taxonomy.csv",
-        # "data/shannon.csv",
-
-        # "resources/feature_table.qza",
-        # "resources/sample_metadata.tsv",
-        # "resources/taxonomy.qza",
-        # "resources/rooted_tree.qza",
-        # "resources/shannon_vector.qza",
-
-		"data/q2_ps.rds",
-
-		"figures/venndiagram.svg",
-		"figures/lineplot.svg",
-		"figures/jitterplot.svg",
-		"figures/pcoa.svg",
-		"figures/heatmap.svg",
-		"figures/barplot.svg",
-
-
+    input: 
+    	"index.html",    
+        # "visual_types/explore_n_visualize.Rmd",
+        expand("visual_types/clusters/{prefix}.Rmd", prefix=config["clusters"]),
+        expand("visual_types/heatmaps/{prefix}.Rmd", prefix=config["heatmaps"]),
+        expand("visual_types/barplots/{prefix}.Rmd", prefix=config["barplots"]),
+        expand("visual_types/boxplots/{prefix}.Rmd", prefix=config["boxplots"]),
+        expand("visual_types/ordinations/{prefix}.Rmd", prefix=config["ordinations"]),
+        expand("visual_types/phylotrees/{prefix}.Rmd", prefix=config["phylotrees"]),

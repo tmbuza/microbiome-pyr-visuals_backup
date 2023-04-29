@@ -24,6 +24,6 @@ left_join(metadata, shannon, by = "sample_id") %>%
   theme(legend.position="right") #remove the legend as it isn't needed  
 
 # ggsave("figures/jitterplot.pdf", height=5, width=6, device="pdf")
-ggsave("figures/jitterplot.png", height=5, width=6, device="png")
-ggsave("figures/jitterplot.svg", height=5, width=6, device="svg")
+ggsave("figures/q2r_jitterplot.png", height=5, width=6, device="png")
+ggsave("figures/q2r_jitterplot.svg", height=5, width=6, device="svg")
 

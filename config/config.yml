@@ -1,8 +1,41 @@
-# config.yaml
+# config.yml
 
-# Path to sample sheet (TSV format, columns: sample_name, condition, ...)
-samples: config/samples.tsv
+heatmaps:
+  - correlation
 
-# Path to sequencing unit sheet (TSV format, columns: sample_name, unit, fq1, fq2)
-units: config/units.tsv
+clusters:
+  - hclusters
 
+barplots:
+  - vbars
+  - hbars
+  - circular
+
+boxplots:
+  - boxplots
+  - violin
+  - jitters
+  - strip
+
+ordinations:
+  - pca
+  - pcoa
+  - nmds
+
+distances:
+  - jaccard
+  - thetayc
+  - bray
+
+phylotrees:
+  - newick
+
+bookdown:
+  - html
+  - pdf
+  - bs4
+
+rmarkdown:
+  - docx
+  - html
+  - pdf

@@ -8,10 +8,19 @@ date:
 - Maintained by Teresia Mrema-Buza<br><br>
 - <b>Updated on `r Sys.Date()`</b>
 author: Teresia Mrema-Buza
-output: 
-  html_document: 
+output:
+    html_document: 
+  # bookdown::bs4_book:
+  #   includes:
+  #     in_header:
+  #   template: bs4_template.html
+documentclass: book
+classoption: openany #remove empty pages in pdf doc
 css:
 - styles.css
+- css/style.css
+- css/toc.css
+- css/bs4_book.css
 csl: "library/apa.csl"
 bibliography:
 - library/references.bib
@@ -57,32 +66,8 @@ library(tidyverse, suppressPackageStartupMessages())
 library(schtools)
 ```
 
+
 # Microbiome Data Visualization
-
-> Do you know how to read `.qza` file?
-```{}
-## Reading and exploring Artifacts (.qza)
-SVs <- read_qza(file = "data/feature_table.qza", tmp = "data/tmpdir", rm = TRUE)
-
-SVs$data[1:4,1:4]
-
-otu_table(q2_ps)[1:4,1:4]
-
-## Reading metadata
-read_q2metadata("data/sample_metadata.tsv")[1:5, 1:5]
-
-read_tsv("data/sample_metadata.tsv", comment = "#q2:types", show_col_types = FALSE)[1:5, 1:5] %>% 
-  rename(SampleID="#SampleID")
-
-## Reading taxonomy
-taxonomy<-read_qza("data/taxonomy.qza")
-head(taxonomy$data)
-
-## Parse tidy taxonomy only
-taxonomy<-parse_taxonomy(taxonomy$data)
-head(taxonomy)
-
-```
 
 <br><hr width=100%><br>
 
@@ -116,24 +101,24 @@ head(taxonomy)
 ::: {#refs}
 :::
 
-<br><hr width=100%><br>
+<!-- <br><hr width=100%><br> -->
 
-# Appendix {-}
+<!-- # Appendix {-} -->
 
-## Project main tree
-```{bash, include=FALSE}
-bash workflow/scripts/tree.sh
-```
+<!-- ## Project main tree -->
+<!-- ```{bash, include=FALSE} -->
+<!-- bash workflow/scripts/tree.sh -->
+<!-- ``` -->
 
-```{bash treeimg}
-cat results/project_tree.txt
-```
+<!-- ```{bash treeimg} -->
+<!-- cat results/project_tree.txt -->
+<!-- ``` -->
 
-<br>
+<!-- <br> -->
 
-```{bash}
-bash workflow/scripts/smk_html_report.sh
-```
+<!-- ```{bash} -->
+<!-- bash workflow/scripts/smk_html_report.sh -->
+<!-- ``` -->
 
 ![](images/smkreport/screenshot.png)
 

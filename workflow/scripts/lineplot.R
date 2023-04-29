@@ -22,5 +22,5 @@ left_join(metadata, shannon, by = "sample_id") %>%
   
 
 # ggsave("figures/lineplot.pdf", height=5, width=6, device="pdf")
-ggsave("figures/lineplot.png", height=5, width=6, device="png")
-ggsave("figures/lineplot.svg", height=5, width=6, device="svg")
+ggsave("figures/q2r_lineplot.png", height=5, width=6, device="png")
+ggsave("figures/q2r_lineplot.svg", height=5, width=6, device="svg")

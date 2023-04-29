@@ -16,5 +16,5 @@ taxasums<-summarize_taxa(ASVs, taxonomy)$Genus
 taxa_barplot(taxasums, metadata, "BodySite")
 
 # ggsave("figures/barplot.pdf", height=4, width=8, device="pdf")
-ggsave("figures/barplot.png", height=4, width=8, device="png")
-ggsave("figures/barplot.svg", height=4, width=8, device="svg")
+ggsave("figures/q2r_barplot.png", height=4, width=8, device="png")
+ggsave("figures/q2r_barplot.svg", height=4, width=8, device="svg")

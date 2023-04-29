@@ -30,7 +30,7 @@ results %>%
 ggsave("volcano.pdf", height=3, width=3, device="pdf")
 
 # ggsave("figures/heatmap.pdf", height=4, width=8, device="pdf")
-ggsave("figures/volcanoplot.png", height=4, width=8, device="png")
-ggsave("figures/volcanoplot.svg", height=4, width=8, device="svg")
+ggsave("figures/q2r_volcanoplot.png", height=4, width=8, device="png")
+ggsave("figures/q2r_volcanoplot.svg", height=4, width=8, device="svg")
 
 

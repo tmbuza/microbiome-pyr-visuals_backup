@@ -422,6 +422,7 @@ print_provenance<-function(artifact){
 # taxa_barplot
 #------------------------------------
 
+
 taxa_barplot<-function(features, metadata, category, normalize, ntoplot){
   
   q2r_palette<-c(
@@ -459,12 +460,12 @@ taxa_barplot<-function(features, metadata, category, normalize, ntoplot){
         gather(-Taxon, key="SampleID", value="Abundance") %>%
         mutate(Taxon=if_else(Taxon %in% plotfeats, Taxon, "Remainder")) %>%
         group_by(Taxon, SampleID) %>%
-        summarise(Abundance=sum(Abundance)) %>%
+        summarize(Abundance=sum(Abundance)) %>%
         ungroup() %>%
         mutate(Taxon=factor(Taxon, levels=rev(c(plotfeats, "Remainder")))) %>%
         left_join(metadata)
     ))
-  g
+  
   
   bplot<-
     ggplot(fplot, aes(x=SampleID, y=Abundance, fill=Taxon)) +
@@ -484,67 +485,8 @@ taxa_barplot<-function(features, metadata, category, normalize, ntoplot){
 
 
 #------------------------------------
-# taxa_heatmap
-#------------------------------------
-
-
-taxa_heatmap<-function(features, metadata, category, normalize, ntoplot){
-  
-  if(missing(ntoplot) & nrow(features)>30){ntoplot=30} else if (missing(ntoplot)){ntoplot=nrow(features)}
-  if(missing(normalize)){normalize<-"log10(percent)"}
-  if(normalize=="log10(percent)"){features<-log10(make_percent(features+1))} else if(normalize=="clr"){features<-make_clr(features)}
-  
-  if(missing(metadata)){metadata<-data.frame(SampleID=colnames(features))}
-  if(!"SampleID" %in% colnames(metadata)){metadata <- metadata %>% rownames_to_column("SampleID")}
-  if(!missing(category)){
-    if(!category %in% colnames(metadata)){message(stop(category, " not found as column in metdata"))}
-  }
-  
-  plotfeats<-names(sort(rowMeans(features), decreasing = TRUE)[1:ntoplot]) # extract the top N most abundant features on average
-  
-  roworder<-hclust(dist(features[plotfeats,]))
-  roworder<-roworder$labels[roworder$order]
-  
-  colorder<-hclust(dist(t(features[plotfeats,])))
-  colorder<-colorder$labels[colorder$order]
-  
-  suppressMessages(
-  suppressWarnings(
-  fplot<-
-    features %>%
-    as.data.frame() %>%
-    rownames_to_column("Taxon") %>%
-    gather(-Taxon, key="SampleID", value="Abundance") %>%
-    filter(Taxon %in% plotfeats) %>%
-    mutate(Taxon=factor(Taxon, levels=rev(plotfeats))) %>%
-    left_join(metadata) %>%
-    mutate(Taxon=factor(Taxon, levels=roworder)) %>%
-    mutate(SampleID=factor(SampleID, levels=colorder))
-  ))
-
-  bplot<-
-    ggplot(fplot, aes(x=SampleID, y=Taxon, fill=Abundance)) +
-    geom_tile(stat="identity") +
-    theme_q2r() +
-    theme(axis.text.x = element_text(angle=45, hjust=1)) +
-    coord_cartesian(expand=FALSE) +
-    xlab("Sample") +
-    ylab("Feature") +
-    scale_fill_viridis_c()
-  
-  if(!missing(category)){bplot<-bplot + facet_grid(~get(category), scales="free_x", space="free")}
-  
-  return(bplot)
-}
-
-
-#------------------------------------
 # theme_q2r
 #------------------------------------
-
-element_line(size = 0.5, linetype = "solid",
-                                   colour = "black")
-
 theme_q2r<- function () { 
   theme_classic(base_size=8, base_family="Helvetica") +
   # theme(panel.border = element_rect(color="black", size=1, fill=NA)) +
