@@ -77,10 +77,25 @@ A detailed interactive snakemake HTML report is available [here](https://complex
 
 <br><hr width=100%><br>
 
+![](figures/q2r_barplot.svg)
+
+<br><br>
+
+![](figures/q2r_heatmap.svg)
 
 
+<br><br>
+
+![](figures/q2r_jitterplot.svg)
+
+<br><br>
+
+![](figures/q2r_lineplot.svg)
 
 
+<br><br>
+
+![](figures/q2r_pcoa.svg)
 
 <br><hr width=100%><br>
 
@@ -99,7 +114,7 @@ A detailed interactive snakemake HTML report is available [here](https://complex
 | [IMAP-PART 06](https://github.com/tmbuza/imap-bioinformatics-qiime2/) | Microbial profiling using QIIME2 and Snakemake workflows | [In-progress](https://tmbuza.github.io/imap-bioinformatics-qiime2/) |
 | [IMAP-PART 07](https://github.com/tmbuza/imap-data-processing/) | Processing Output from 16S-Based microbiome bioinformatics pipelines| [In-progress](https://tmbuza.github.io/imap-data-processing/) |
 | [IMAP-PART 08](https://github.com/tmbuza/imap-exploratory-analysis/) | Exploratory Analysis of 16S-Based Microbiome Processed Data | [In-progress](https://tmbuza.github.io/imap-exploratory-analysis/) |
-| [IMAP-PART 09](https://github.com/tmbuza/imap-data-visualization/) | Exploratory Analysis of 16S-Based Microbiome Processed Data | [In-progress](https://tmbuza.github.io/imap-data-visualization/) |
+| [IMAP-PART 09](https://github.com/tmbuza/imap-data-visualization/) | Visualization of Microbiome Data with the integration of Snakemake Workflows | [In-progress](https://visuals.complexdatainsights.com) |
 | [IMAP-PART XX](https://github.com/tmbuza/imap-machine-learning/) | Predictive Modeling of Microbiome Data Using Machine Learning Techniques | [In-progress](https://tmbuza.github.io/imap-machine-learning/) |
   [IMAP-SUMMARY](https://github.com/tmbuza/imap-snakemake-workflows/) | Summary of snakemake workflows for microbiome data analysis | [In-progress](https://tmbuza.github.io/imap-snakemake-workflows/) |
 ```
