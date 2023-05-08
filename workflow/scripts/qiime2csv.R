@@ -1,7 +1,7 @@
-
 source("workflow/scripts/common.R")
-source("workflow/scripts/qiime2R.R")
+# source("workflow/scripts/qiime2R.R")
 
+library(qiime2R)
 library(utils)
 library(tidyverse)
 library(yaml)
@@ -16,7 +16,7 @@ if (!dir.exists("data")){dir.create("data")}
 metadata <- read_q2metadata("data/sample_metadata.tsv") %>% 
   as.data.frame() %>% 
   rename(sample_id="SampleID") 
-head(metadata)
+
 
 metadata %>% 
   write_csv("data/metadata.csv")
@@ -25,7 +25,7 @@ metadata %>%
 features <- read_qza("data/feature_table.qza")$data %>% 
   as.data.frame() %>% 
   tibble::rownames_to_column(., "feature")
-head(features)
+
 
 features %>% 
   write_csv("data/features.csv")
@@ -34,17 +34,15 @@ features %>%
 taxonomy <- read_qza("data/taxonomy.qza")$data %>% 
   as.data.frame() %>%
   rename(feature="Feature.ID") 
-head(taxonomy)
+
 
 taxonomy %>% 
   write_csv("data/taxonomy.csv")
 
 
-shannon <- read_qza("data/shannon.qza")$data %>% 
-  as.data.frame() %>%
+shannon <- read_qza("data/shannon_vector.qza")$data %>% 
   tibble::rownames_to_column(., "sample_id") %>% 
-  rename(shannon="shannon_entropy") 
-head(shannon)
+  as.data.frame()
 
 shannon %>% 
   write_csv("data/shannon.csv")

@@ -1,12 +1,14 @@
 source("workflow/scripts/common.R")
-source("workflow/scripts/qiime2R.R")
+# source("workflow/scripts/qiime2R.R")
 
+library(qiime2R)
 library(tidyverse)
+library(qiime2R)
 library(yaml)
 
-metadata <- read_q2metadata("resources/sample_metadata.tsv") %>% 
+metadata <- read_q2metadata("data/sample_metadata.tsv") %>% 
   rename(sample_id = SampleID)
-shannon <- read_qza("resources/shannon_vector.qza")$data %>% 
+shannon <- read_qza("data/shannon_vector.qza")$data %>% 
   rownames_to_column("SampleID") %>% 
   rename(sample_id = SampleID)
 

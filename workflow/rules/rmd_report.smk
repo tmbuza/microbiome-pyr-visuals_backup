@@ -21,9 +21,19 @@ rule project_tree:
 		"""
 
 # Get smk html report
-rule snakemake_html_report:
+rule snakemake_interactive_report:
 	output:
 		smkhtml="report.html",
+	conda:
+		"../envs/environment.yml"
+	shell:
+		"""
+		bash workflow/scripts/smk_html_report.sh
+		"""
+
+# Get smk html report
+rule snakemake_static_report:
+	output:
 		smkpng="images/smkreport/screenshot.png",
 	conda:
 		"../envs/environment.yml"
@@ -38,6 +48,7 @@ rule deploy_to_github_pages:
 	input:
 		rulegraph="dags/rulegraph.svg",
 		tree="results/project_tree.txt",
+		smkpng="images/smkreport/screenshot.png",
 	output:
 		doc="index.html",
 	conda:

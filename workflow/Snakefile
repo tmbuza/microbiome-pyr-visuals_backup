@@ -8,11 +8,7 @@ configfile: "config/config.yml"
 report: "report/workflow.rst"
 
 
-include: "rules/visual_types.smk"
-# include: "rules/.smk"
-# include: "rules/.smk"
-# include: "rules/.smk"
-# include: "rules/.smk"
+include: "rules/import_demo_data.smk"
 include: "rules/rmd_report.smk"
 
 report: "report/workflow.rst"
@@ -20,11 +16,28 @@ report: "report/workflow.rst"
 
 rule all:
     input: 
-    	"index.html",    
-        # "visual_types/explore_n_visualize.Rmd",
-        expand("visual_types/clusters/{prefix}.Rmd", prefix=config["clusters"]),
-        expand("visual_types/heatmaps/{prefix}.Rmd", prefix=config["heatmaps"]),
-        expand("visual_types/barplots/{prefix}.Rmd", prefix=config["barplots"]),
-        expand("visual_types/boxplots/{prefix}.Rmd", prefix=config["boxplots"]),
-        expand("visual_types/ordinations/{prefix}.Rmd", prefix=config["ordinations"]),
-        expand("visual_types/phylotrees/{prefix}.Rmd", prefix=config["phylotrees"]),
+        "figures/q2r_lineplot.svg",
+        "figures/q2r_jitterplot.svg",
+        "figures/q2r_pcoa.svg",
+        "figures/q2r_heatmap.svg",
+        "figures/q2r_barplot.svg",
+
+        # "data/processed_objects.rda",
+        # "data/feature_table.qza",
+        # "data/sample_metadata.tsv",
+        # "data/taxonomy.qza",
+        # "data/rooted_tree.qza",
+        # "data/shannon_vector.qza",
+
+        # "data/features.csv",
+        # "data/metadata.csv",
+        # "data/taxonomy.csv",
+        # "data/shannon.csv",
+
+        "report.html",
+        # "images/smkreport/screenshot.png",
+        # "results/project_tree.txt",
+        # "dags/rulegraph.svg",
+        # "dags/rulegraph.png",
+
+        "index.html",

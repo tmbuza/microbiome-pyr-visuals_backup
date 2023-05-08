@@ -1,26 +1,17 @@
 ---
-title:  "<big><u>IMAP-PART 09</u></big><br><br>Multi-Dimensional Data Visualization with integrated tools and Snakemake workflow<br><br>"
+title:  "<big><u>IMAP-PART 08</u></big><br><br>Exploratory Analysis of 16S-Based Microbial Profiles<br><br>"
 subtitle: |
-  | ![](images/vizcover.png)<br>
-  | Fostering Reproducible Microbiome data visualization with Snakemake workflow
+  | ![](images/coders.png)<br>
+  | Fostering Reproducible Microbiome data Analysis with Snakemake workflow
 date:
-- IMAP-PART 09<br>[Latest GitHub-Repo](https://github.com/tmbuza/imap-data-visualization/)<br>
+- IMAP-PART 08<br>[Latest GitHub-Repo](https://github.com/tmbuza/imap-exploratory-analysis/)<br>
 - Maintained by Teresia Mrema-Buza<br><br>
 - <b>Updated on `r Sys.Date()`</b>
 author: Teresia Mrema-Buza
-output:
-    html_document: 
-  # bookdown::bs4_book:
-  #   includes:
-  #     in_header:
-  #   template: bs4_template.html
-documentclass: book
-classoption: openany #remove empty pages in pdf doc
+output: 
+  html_document: 
 css:
 - styles.css
-- css/style.css
-- css/toc.css
-- css/bs4_book.css
 csl: "library/apa.csl"
 bibliography:
 - library/references.bib
@@ -29,9 +20,9 @@ link-citations: true
 mainfont:
 biblio-style: apalike
 email_address: "tmbuza@complexdatainsights.com"
-github_repo: "https://github.com/tmbuza/imap-data-visualization"
+github_repo: "https://github.com/tmbuza/imap-exploratory-analysis"
 description: |
-  | How to get started with systematic microbiome data analysis with Snakemake workflows.
+  | Systematic microbiome data analysis with Snakemake workflows.
 ---
 
 
@@ -66,13 +57,36 @@ library(tidyverse, suppressPackageStartupMessages())
 library(schtools)
 ```
 
+# Deep exploration of microbial profiles
 
-# Microbiome Data Visualization
+
+...BRIEF INTRO IN PROGRESS...
+
+
+<br>
+
+## Snakemake workflow for exploratory data analysis
+
+<br>
+
+![](dags/rulegraph.svg)
+
+A tentative snakemake workflow that defines **data exploration rules** in a DAG (directed acyclic graph) format. 
+A detailed interactive snakemake HTML report is available [here](https://complexdatainsights.com/imap/imap-exploratory-analysis/report.html). Use a wider screen to get a better interactive snakemake report.
+
+
+<br><hr width=100%><br>
+
+
+
+
+
 
 <br><hr width=100%><br>
 
 ## Related work
 ```{block imaprepos, echo=TRUE}
+
 
 | Repo | Description | Status |
 |:-----------------------|----------------------------------|--------------:|
@@ -85,11 +99,10 @@ library(schtools)
 | [IMAP-PART 06](https://github.com/tmbuza/imap-bioinformatics-qiime2/) | Microbial profiling using QIIME2 and Snakemake workflows | [In-progress](https://tmbuza.github.io/imap-bioinformatics-qiime2/) |
 | [IMAP-PART 07](https://github.com/tmbuza/imap-data-processing/) | Processing Output from 16S-Based microbiome bioinformatics pipelines| [In-progress](https://tmbuza.github.io/imap-data-processing/) |
 | [IMAP-PART 08](https://github.com/tmbuza/imap-exploratory-analysis/) | Exploratory Analysis of 16S-Based Microbiome Processed Data | [In-progress](https://tmbuza.github.io/imap-exploratory-analysis/) |
-| [IMAP-PART 09](https://github.com/tmbuza/imap-data-visualization/) | Visualization of Microbiome Profiles with Snakemake workflows | [In-progress](https://tmbuza.github.io/imap-data-visualization/) |
-| [IMAP-SUMMARY](https://github.com/tmbuza/imap-snakemake-workflows/) | Summary of snakemake workflows for microbiome data analysis | [In-progress](https://tmbuza.github.io/imap-snakemake-workflows/) |
+| [IMAP-PART 09](https://github.com/tmbuza/imap-data-visualization/) | Exploratory Analysis of 16S-Based Microbiome Processed Data | [In-progress](https://tmbuza.github.io/imap-data-visualization/) |
+| [IMAP-PART XX](https://github.com/tmbuza/imap-machine-learning/) | Predictive Modeling of Microbiome Data Using Machine Learning Techniques | [In-progress](https://tmbuza.github.io/imap-machine-learning/) |
+  [IMAP-SUMMARY](https://github.com/tmbuza/imap-snakemake-workflows/) | Summary of snakemake workflows for microbiome data analysis | [In-progress](https://tmbuza.github.io/imap-snakemake-workflows/) |
 ```
-
-<br>
 
 ## Citation
 
@@ -101,24 +114,20 @@ library(schtools)
 ::: {#refs}
 :::
 
-<!-- <br><hr width=100%><br> -->
+<br><hr width=100%><br>
 
-<!-- # Appendix {-} -->
+# Appendix {-}
 
-<!-- ## Project main tree -->
-<!-- ```{bash, include=FALSE} -->
-<!-- bash workflow/scripts/tree.sh -->
-<!-- ``` -->
+## Project main tree
+```{bash, include=FALSE}
+bash workflow/scripts/tree.sh
+```
 
-<!-- ```{bash treeimg} -->
-<!-- cat results/project_tree.txt -->
-<!-- ``` -->
+```{bash treeimg}
+cat results/project_tree.txt
+```
 
-<!-- <br> -->
-
-<!-- ```{bash} -->
-<!-- bash workflow/scripts/smk_html_report.sh -->
-<!-- ``` -->
+<br>
 
 ![](images/smkreport/screenshot.png)
 
@@ -143,3 +152,4 @@ Last updated on `r format(Sys.time(), '%B %d, %Y')`.<br>
 Github_Repo: `r rmarkdown::metadata$github_repo`.<br>
 Repo compiled and maintained by: [`r rmarkdown::metadata$author`](mailto:`r rmarkdown::metadata$email_address`). 
 </div>
+

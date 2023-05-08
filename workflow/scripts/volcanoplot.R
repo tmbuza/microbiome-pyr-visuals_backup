@@ -1,18 +1,19 @@
 source("workflow/scripts/common.R")
-source("workflow/scripts/qiime2R.R")
+# source("workflow/scripts/qiime2R.R")
 
+library(qiime2R)
 library(tidyverse)
 library(qiime2R)
 library(ggrepel)
 library(ggtree)
 library(ape)
 
-metadata<-read_q2metadata("resources/sample_metadata.tsv")
-ASVs<-read_qza("resources/feature_table.qza")$data
+metadata<-read_q2metadata("data/sample_metadata.tsv")
+ASVs<-read_qza("data/feature_table.qza")$data
 download.file("https://library.qiime2.org/plugins/q2-aldex2/24/")
 results<-read_qza("differentials.qza")$data
-taxonomy<-read_qza("resources/taxonomy.qza")$data %>% parse_taxonomy()
-tree<-read_qza("resources/rooted_tree.qza")$data
+taxonomy<-read_qza("data/taxonomy.qza")$data %>% parse_taxonomy()
+tree<-read_qza("data/rooted_tree.qza")$data
 
 results %>%
   left_join(taxonomy) %>%

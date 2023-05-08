@@ -1,17 +1,18 @@
 source("workflow/scripts/common.R")
-source("workflow/scripts/qiime2R.R")
+# source("workflow/scripts/qiime2R.R")
 
+library(qiime2R)
 library(tidyverse)
 library(tools)
 library(yaml)
 library(rhdf5)
 library(Matrix)
 
-download.file("https://docs.qiime2.org/2020.2/data/tutorials/moving-pictures/core-metrics-results/unweighted_unifrac_pcoa_results.qza", "resources/unweighted_unifrac_pcoa.qza")
+download.file("https://docs.qiime2.org/2020.2/data/tutorials/moving-pictures/core-metrics-results/unweighted_unifrac_pcoa_results.qza", "data/unweighted_unifrac_pcoa.qza")
 
-metadata<-read_q2metadata("resources/sample_metadata.tsv")
-uwunifrac<-read_qza("resources/unweighted_unifrac_pcoa.qza")
-shannon<-read_qza("resources/shannon_vector.qza")$data %>% rownames_to_column("SampleID") 
+metadata<-read_q2metadata("data/sample_metadata.tsv")
+uwunifrac<-read_qza("data/unweighted_unifrac_pcoa.qza")
+shannon<-read_qza("data/shannon_vector.qza")$data %>% rownames_to_column("SampleID") 
 
 uwunifrac$data$Vectors %>%
   select(SampleID, PC1, PC2) %>%
