@@ -8,13 +8,20 @@ configfile: "config/config.yml"
 report: "report/workflow.rst"
 
 
-include: "rules/import_demo_data.smk"
-include: "rules/rmd_report.smk"
+include: "rules/processed_data.smk"
+include: "rules/project_tree.smk"
+include: "rules/lineplot.smk"
+include: "rules/pcoa.smk"
+include: "rules/heatmap.smk"
+include: "rules/jitter.smk"
+include: "rules/barplot.smk"
+include: "rules/gh_pages.smk"
+include: "rules/rulegraph.smk"
 
 report: "report/workflow.rst"
 
 
-rule all:
+rule targeted_results:
     input: 
         "figures/q2r_lineplot.svg",
         "figures/q2r_jitterplot.svg",

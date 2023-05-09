@@ -34,4 +34,6 @@ dependencies:
   - bioconductor-phyloseq
   - bioconductor-rhdf5
   - yaml >=0.2.5
+  - xlsxwriter =3.1.0
+
 
