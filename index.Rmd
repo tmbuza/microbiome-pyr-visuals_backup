@@ -1,10 +1,10 @@
 ---
-title:  "<big><u>IMAP-PART 08</u></big><br><br>Exploratory Analysis of 16S-Based Microbial Profiles<br><br>"
+title:  "<big><u>IMAP-VISUALIZATION</u></big><br><br>Exploratory Analysis of 16S-Based Microbial Profiles<br><br>"
 subtitle: |
   | ![](images/coders.png)<br>
   | Fostering Reproducible Microbiome data Analysis with Snakemake workflow
 date:
-- IMAP-PART 08<br>[Latest GitHub-Repo](https://github.com/tmbuza/imap-exploratory-analysis/)<br>
+- IMAP-VISUALIZATION<br>[Latest GitHub-Repo](https://github.com/tmbuza/imap-data-visualization/)<br>
 - Maintained by Teresia Mrema-Buza<br><br>
 - <b>Updated on `r Sys.Date()`</b>
 author: Teresia Mrema-Buza
@@ -20,7 +20,7 @@ link-citations: true
 mainfont:
 biblio-style: apalike
 email_address: "tmbuza@complexdatainsights.com"
-github_repo: "https://github.com/tmbuza/imap-exploratory-analysis"
+github_repo: "https://github.com/tmbuza/imap-data-visualization"
 description: |
   | Systematic microbiome data analysis with Snakemake workflows.
 ---
@@ -52,54 +52,173 @@ knitr::opts_chunk$set(
   fig.asp  =0.7,
   fig.show  ="asis"
 )
-
-library(tidyverse, suppressPackageStartupMessages())
+suppressPackageStartupMessages(library(tidyverse))
 library(schtools)
+library(tools)
+library(yaml)
+library(rhdf5)
+library(Matrix)
+library(qiime2R)
+library(microViz)
+library(vegan)
+library(phyloseq)
+
+load("data/processed_objects.rda", verbose=TRUE)
 ```
 
-# Deep exploration of microbial profiles
+```{css}
+body h2 { margin-top: 1.8em; font-size: 2.0em; color: rgb(77, 148, 248);}
+body h2 { margin-top: 1.8em; font-size: 2.0em;}
+body h3 { margin-top: 1.8em; font-size: 1.6em; }
+body h4 { margin-top: 1.8em; font-size: 1.2em; }
+body h5 { margin-top: 1.8em; font-size: 1em; }
+```
 
 
-...BRIEF INTRO IN PROGRESS...
+# Microbiome Data Visualization
 
+
+## Overview of Snakemake workflow
 
 <br>
-
-## Snakemake workflow for exploratory data analysis
-
 <br>
 
 ![](dags/rulegraph.svg)
 
-A tentative snakemake workflow that defines **data exploration rules** in a DAG (directed acyclic graph) format. 
-A detailed interactive snakemake HTML report is available [here](https://complexdatainsights.com/imap/imap-exploratory-analysis/report.html). Use a wider screen to get a better interactive snakemake report.
 
 
-<br><hr width=100%><br>
 
-![](figures/q2r_barplot.svg)
+# Heatmaps
+
+
+## Using `qiime2R`
+```{r}
+metadata<-read_q2metadata("data/sample_metadata.tsv")
+ASVs<-read_qza("data/feature_table.qza")$data
+taxonomy<-read_qza("data/taxonomy.qza")$data %>% parse_taxonomy()
+
+taxasums<-summarize_taxa(ASVs, taxonomy)$Genus
+
+taxa_heatmap(taxasums, metadata, "BodySite")
+```
+
+## Using `ggplot`
+
+Bray-Curtis
+```{r}
+ps <- ps_dietswap
+
+otutable <- otu_table(ps) %>% 
+  psmelt() %>% 
+  group_by(Sample) %>%
+  mutate(N = sum(Abundance)) %>%
+  ungroup()
+
+n=min(otutable$N)
+      
+otutable <- otutable %>% 
+  filter(N >= n) %>%
+  select(-N) %>% 
+  pivot_wider(names_from="OTU", values_from="Abundance", values_fill=0) %>%
+  column_to_rownames("Sample")
+
+## Getting Bray-`Curtis` distances
+
+bray <- avgdist(otutable, dmethod="bray", sample=1776) %>%
+  as.matrix() %>%
+  as_tibble(rownames = "A") %>%
+  pivot_longer(-A, names_to="B", values_to="distances")
+
+bray %>%
+  ggplot(aes(x=A, y=B, fill=distances)) +
+  geom_tile() +
+  theme(axis.text = element_blank()) +
+  scale_fill_gradient(low="#FF0000", high="#FFFFFF", name=NULL)
+```
+
+Jaccard
+```{r}
+## Getting `Jaccard` distances
+jaccard <- avgdist(otutable, dmethod="jaccard", sample=1776) %>%
+  as.matrix() %>%
+  as_tibble(rownames = "A") %>%
+  pivot_longer(-A, names_to="B", values_to="distances")
+
+jaccard %>%
+  ggplot(aes(x=A, y=B, fill=distances)) +
+  geom_tile() +
+  theme(axis.text = element_blank()) +
+  scale_fill_gradient(low="#FF0000", high="#FFFFFF", name=NULL)
+```
+
+
+Bray-Curtis and Jaccard
+```{r}
+labels <- tibble(
+  x=c(50, 190),
+  y=c(190, 30),
+  label=c("Bray-Curtis", "Jaccard")
+)
+
+inner_join(bray, jaccard, by=c("A", "B")) %>%
+  select(A, B, bray=distances.x, jaccard=distances.y) %>%
+  mutate(distances = if_else(A < B, bray, jaccard)) %>%
+  ggplot(aes(x=A, y=B, fill=distances)) +
+  geom_tile() +
+  geom_text(data=labels, aes(x=(x), y=y, label=label), inherit.aes=FALSE,
+            size=10) +
+  scale_fill_gradient(low="#FF0000", high="#FFFFFF", name=NULL) +
+  labs(x="", y="") +
+  theme_classic() +
+  theme(axis.text = element_blank())
+```
+
+## Using `microViz`
+
+No group annotation 
+```{r}
+htmp <- ps_dietswap %>%
+  ps_mutate(nationality = as.character(nationality)) %>%
+  tax_transform("log2", add = 1, chain = TRUE) %>%
+  comp_heatmap(
+    taxa = tax_top(ps_dietswap, n = 30), grid_col = NA, name = "Log2p",
+    taxon_renamer = function(x) stringr::str_remove(x, " [ae]t rel."),
+    colors = heat_palette(palette = viridis::turbo(11)),
+    row_names_side = "left", row_dend_side = "right", sample_side = "bottom",
+      )
+htmp
+```
+
+With group annotation at the bottom
+```{r}
+ComplexHeatmap::draw(
+  object = htmp, annotation_legend_list = attr(htmp, "AnnoLegends"),
+  merge_legends = TRUE
+)
+
+```
+
+
 
 <br><br>
 
-![](figures/q2r_heatmap.svg)
-
-
-<br><br>
-
+# Jitter plots
 ![](figures/q2r_jitterplot.svg)
 
 <br><br>
 
+# Line plots
 ![](figures/q2r_lineplot.svg)
 
 
 <br><br>
 
+# PCoA ordination
 ![](figures/q2r_pcoa.svg)
 
 <br><hr width=100%><br>
 
-## Related work
+# Related work
 ```{block imaprepos, echo=TRUE}
 
 

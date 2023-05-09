@@ -7,6 +7,7 @@ library(yaml)
 library(rhdf5)
 library(Matrix)
 library(qiime2R)
+library(microViz)
 
 metadata<-read_q2metadata("data/sample_metadata.tsv")
 ASVs<-read_qza("data/feature_table.qza")$data
@@ -84,12 +85,36 @@ inner_join(bray, jaccard, by=c("A", "B")) %>%
   labs(x="", y="") +
   theme_classic() +
   theme(axis.line=element_blank(),
-        axis.ticks = element_blank(),
-        axis.text = element_text(size=8),
+        # axis.ticks = element_blank(),
         axis.text.y = element_text(hjust= 0.5),
-        axis.text.x = element_text(angle = 90, size = 6))
+        axis.text.x = element_text(angle = 90, size = 6),
+        axis.text = element_blank())
 
 
+ggsave("figures/ggplot_heatmap.png", height=4, width=8, device="png")
+ggsave("figures/ggplot_heatmap.svg", height=4, width=8, device="svg")
 
-ggsave("figures/q2r_heatmap.png", height=4, width=8, device="png")
-ggsave("figures/q2r_heatmap.svg", height=4, width=8, device="svg")
+
+htmp <- ps_dietswap %>%
+  ps_mutate(nationality = as.character(nationality)) %>%
+  tax_transform("log2", add = 1, chain = TRUE) %>%
+  comp_heatmap(
+    taxa = tax_top(ps_dietswap, n = 30), grid_col = NA, name = "Log2p",
+    taxon_renamer = function(x) stringr::str_remove(x, " [ae]t rel."),
+    colors = heat_palette(palette = viridis::turbo(11)),
+    row_names_side = "left", row_dend_side = "right", sample_side = "bottom",
+    sample_anno = sampleAnnotation(
+      Nationality = anno_sample_cat(
+        var = "nationality", col = c(AAM = "red", AFR = "green"),
+        box_col = NA, legend_title = "Nationality", size = grid::unit(4, "mm")
+      )
+    )
+  )
+
+ComplexHeatmap::draw(
+  object = htmp, annotation_legend_list = attr(htmp, "AnnoLegends"),
+  merge_legends = TRUE
+)
+
+ggsave("figures/microviz_heatmap.png", height=4, width=8, device="png")
+ggsave("figures/microviz_heatmap.svg", height=4, width=8, device="svg")
