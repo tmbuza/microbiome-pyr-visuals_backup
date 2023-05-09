@@ -67,11 +67,11 @@ load("data/processed_objects.rda", verbose=TRUE)
 ```
 
 ```{css}
-body h2 { margin-top: 1.8em; font-size: 2.0em; color: rgb(77, 148, 248);}
-body h2 { margin-top: 1.8em; font-size: 2.0em;}
+body h1 { margin-top: 1.8em; font-size: 2.0em; }
+body h2 { margin-top: 1.8em; font-size: 2.0em; }
 body h3 { margin-top: 1.8em; font-size: 1.6em; }
 body h4 { margin-top: 1.8em; font-size: 1.2em; }
-body h5 { margin-top: 1.8em; font-size: 1em; }
+body h5 { margin-top: 1.8em; font-size: 1.0em; }
 ```
 
 
@@ -235,7 +235,7 @@ ComplexHeatmap::draw(
 | [IMAP-PART 08](https://github.com/tmbuza/imap-exploratory-analysis/) | Exploratory Analysis of 16S-Based Microbiome Processed Data | [In-progress](https://tmbuza.github.io/imap-exploratory-analysis/) |
 | [IMAP-PART 09](https://github.com/tmbuza/imap-data-visualization/) | Visualization of Microbiome Data with the integration of Snakemake Workflows | [In-progress](https://visuals.complexdatainsights.com/) |
 | [IMAP-PART XX](https://github.com/tmbuza/imap-machine-learning/) | Predictive Modeling of Microbiome Data Using Machine Learning Techniques | [In-progress](https://tmbuza.github.io/imap-machine-learning/) |
-  [IMAP-SUMMARY](https://github.com/tmbuza/imap-snakemake-workflows/) | Summary of snakemake workflows for microbiome data analysis | [In-progress](https://(https://imap.complexdatainsights.com) |
+  [IMAP-SUMMARY](https://github.com/tmbuza/imap-snakemake-workflows/) | Summary of snakemake workflows for microbiome data analysis | [In-progress](https://imap.complexdatainsights.com/) |
 ```
 
 ## Citation
