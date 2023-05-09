@@ -112,8 +112,17 @@ htmp <- ps_dietswap %>%
   )
 
 ComplexHeatmap::draw(
-  object = htmp, annotation_legend_list = attr(htmp, "AnnoLegends"),
-  merge_legends = TRUE
+  object = htmp,
+  sample_anno = sampleAnnotation(
+    Nationality = anno_sample_cat(
+      var = "nationality", 
+      col = c(AAM = "red", AFR = "green"),
+      box_col = NA, 
+      legend_title = "Nationality", 
+      size = grid::unit(4, "mm")annotation_legend_list = attr(htmp, "AnnoLegends"),
+      merge_legends = TRUE
+    )
+  )
 )
 
 ggsave("figures/microviz_heatmap.png", height=4, width=8, device="png")
