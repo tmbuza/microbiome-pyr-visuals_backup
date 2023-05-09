@@ -62,8 +62,10 @@ library(qiime2R)
 library(microViz)
 library(vegan)
 library(phyloseq)
+library(microbiome)
 
-load("data/processed_objects.rda", verbose=TRUE)
+
+# load("data/processed_objects.rda", verbose=TRUE)
 ```
 
 ```{css}
@@ -77,22 +79,96 @@ body h5 { margin-top: 1.8em; font-size: 1.0em; }
 
 # Microbiome Data Visualization
 
+## Get a public 16S-demo dataset
+Using `dietswap` from `microbiome` package
+```{r data}
+library(microbiome)
+data("dietswap", package = "microbiome")
+ps <- dietswap
+ps
+```
 
-## Overview of Snakemake workflow
 
-<br>
-<br>
+## Explore variables and missing values
+```{r status}
+library(microbiome)
+library(phyloseq)
+data("dietswap", package = "microbiome")
+
+df <-dietswap %>% 
+  phyloseq::psmelt() %>% 
+  select(-sample) %>% 
+  tibble::rownames_to_column("sample_id") %>% 
+  rename_all(tolower)
+
+library(funModeling)
+df_status(df, print_results = FALSE) %>% 
+  select(variable, type, unique, p_zeros) %>% tibble::tibble()
+```
+
+
+
+## Frequency distributions for categoric variables
+```{r freq_catvars}
+library(funModeling)
+freq(df, 
+     input = c("sex", "nationality", "group", "bmi_group"), 
+     plot = TRUE,
+     na.rm = FALSE)
+```
+
+## Correlation of numeric varaiables
+```{r corr}
+library(funModeling)
+correlation_table(df, "sex")
+```
+
+
+## Boxplot
+```{r boxplot}
+library(funModeling)
+plotar(df, input = c("sex", "nationality"), target="sex", plot_type="boxplot")
+```
+
+## Density histogram
+```{r histdens}
+library(funModeling)
+plotar(df, input = c("sex", "nationality"), target="sex", plot_type="histdens")
+```
+
+
+# Predictive model performance
+
+## Gain and lift performance curve
+Dataset: `heart_disease` from `funModeling`
+```{r glm}
+library(funModeling)
+
+# Create machine learning model and get its scores for positive case 
+fit_glm=glm(has_heart_disease ~ age + oldpeak, data=heart_disease, family = binomial)
+heart_disease$score=predict(fit_glm, newdata=heart_disease, type='response')
+
+# Calculate performance metrics
+gain_lift(data=heart_disease, score='score', target='has_heart_disease')
+```
+
+# Coordinate plot: Profile mean clusters
+```{r coord}
+coord_plot(data=mtcars, group_var="cyl", group_func=median, print_table=TRUE)
+```
+
+
+# Snakemake workflow
+
 
 ![](dags/rulegraph.svg)
-
-
 
 
 # Heatmaps
 
 
 ## Using `qiime2R`
-```{r}
+```{r taxahtmp}
 metadata<-read_q2metadata("data/sample_metadata.tsv")
 ASVs<-read_qza("data/feature_table.qza")$data
 taxonomy<-read_qza("data/taxonomy.qza")$data %>% parse_taxonomy()
@@ -105,8 +181,8 @@ taxa_heatmap(taxasums, metadata, "BodySite")
 ## Using `ggplot`
 
 Bray-Curtis
-```{r}
-ps <- ps_dietswap
+```{r bray}
+ps <- ps
 
 otutable <- otu_table(ps) %>% 
   psmelt() %>% 
@@ -137,7 +213,7 @@ bray %>%
 ```
 
 Jaccard
-```{r}
+```{r jaccard}
 ## Getting `Jaccard` distances
 jaccard <- avgdist(otutable, dmethod="jaccard", sample=1776) %>%
   as.matrix() %>%
@@ -153,7 +229,7 @@ jaccard %>%
 
 
 Bray-Curtis and Jaccard
-```{r}
+```{r bray_jcard}
 labels <- tibble(
   x=c(50, 190),
   y=c(190, 30),
@@ -173,24 +249,43 @@ inner_join(bray, jaccard, by=c("A", "B")) %>%
   theme(axis.text = element_blank())
 ```
 
+
 ## Using `microViz`
 
-No group annotation 
-```{r}
-htmp <- ps_dietswap %>%
+Heatmap without sample annotation
+```{r microvizhtmp}
+ps %>%
   ps_mutate(nationality = as.character(nationality)) %>%
   tax_transform("log2", add = 1, chain = TRUE) %>%
   comp_heatmap(
-    taxa = tax_top(ps_dietswap, n = 30), grid_col = NA, name = "Log2p",
+    taxa = tax_top(ps, n = 30), grid_col = NA, name = "Log2p",
     taxon_renamer = function(x) stringr::str_remove(x, " [ae]t rel."),
     colors = heat_palette(palette = viridis::turbo(11)),
     row_names_side = "left", row_dend_side = "right", sample_side = "bottom",
-      )
-htmp
+  )
 ```
 
-With group annotation at the bottom
-```{r}
+Heatmap with sample annotation
+```{r micrvizannothtmp}
+library(tidyverse)
+library(microViz)
+library(phyloseq)
+data("dietswap")
+htmp <- ps %>%
+  ps_mutate(nationality = as.character(nationality)) %>%
+  tax_transform("log2", add = 1, chain = TRUE) %>%
+  comp_heatmap(
+    taxa = tax_top(ps, n = 30), grid_col = NA, name = "Log2p",
+    taxon_renamer = function(x) stringr::str_remove(x, " [ae]t rel."),
+    colors = heat_palette(palette = viridis::turbo(11)),
+    row_names_side = "left", row_dend_side = "right", sample_side = "bottom",
+    sample_anno = sampleAnnotation(
+    Nationality = anno_sample_cat(
+    var = "nationality", col = c(AAM = "red", AFR = "green"),
+    box_col = NA, legend_title = "Nationality", size = grid::unit(4, "mm")
+    )
+  )
+)
 ComplexHeatmap::draw(
   object = htmp, annotation_legend_list = attr(htmp, "AnnoLegends"),
   merge_legends = TRUE
