@@ -98,9 +98,18 @@ download.file("https://docs.qiime2.org/2018.4/data/tutorials/moving-pictures/tax
 download.file("https://docs.qiime2.org/2018.4/data/tutorials/moving-pictures/rooted-tree.qza", "data/rooted_tree.qza")
 download.file("https://docs.qiime2.org/2018.4/data/tutorials/moving-pictures/core-metrics-results/shannon_vector.qza", "data/shannon_vector.qza")
 
-load("data/processed_objects.rda", verbose=TRUE)
+# load("data/processed_objects.rda", verbose=TRUE)
 
-# R -e 'devtools::install_github("jbisanz/qiime2R")'
+
+# R -e 'remotes::install_github("jbisanz/qiime2R")'s
 # R -e 'remotes::install_github("david-barnett/microViz")'
-# R -e 'devtools::install_github("vmikk/metagMisc")
-# R -e 'devtools::install_github("bryandmartin/corncob")'
+# R -e 'remotes::install_github("vmikk/metagMisc")'
+# R -e 'remotes::install_github("bryandmartin/corncob")'
+# R -e 'remotes::install_github("pablo14/funModeling")'
+# R -e 'remotes::install_github("cran/cgwtools")'
+# R -e 'remotes::install_github("jeroen/jsonlite")'
+
+# R -e '(if (!"remotes" %in% installed.packages()[,"Package"]) install.packages("remotes"))'
+# R -e '(Sys.setenv(R_REMOTES_STANDALONE = "true"))'
+
+# R -e '(if (!"devtools" %in% installed.packages()[,"Package"]) install.packages("devtools"))'

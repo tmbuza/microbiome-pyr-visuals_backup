@@ -1,0 +1,221 @@
+set.seed(2023)
+library(tidyverse)
+library(readxl)
+library(ggtext)
+library(RColorBrewer)
+library(ggpubr)
+
+load("data/phyloseq_objects.rda")
+
+otu_rel_abund <- ps_df %>% 
+  mutate(nationality = factor(nationality, 
+                      levels = c("AAM", "AFR"),
+                      labels = c("African American", "African")),
+         bmi = factor(bmi, 
+                      levels = c("lean", "overweight", "obese"),
+                      labels = c("Lean", "Overweight", "Obese")),
+         sex = factor(sex,
+                      levels =c("female", "male"),
+                      labels = c("Female", "Male")))
+
+taxon_rel_abund <- otu_rel_abund %>%
+  filter(level=="genus",
+         !grepl(".*unassigned.*|.*nclassified.*|.*ncultured.*",taxon)) %>%
+  group_by(nationality, sample_id, taxon) %>%
+  summarise(rel_abund = 100*sum(rel_abund), .groups="drop") %>%
+  mutate(taxon = str_replace(taxon, "(.*)_unclassified", "Unclassified<br>*\\1*"),
+         taxon = str_replace(taxon, "^$", "*\\1*"),
+         taxon = str_replace(taxon, "_", " "))
+
+
+taxon_pool <- taxon_rel_abund %>%
+  group_by(nationality, taxon) %>%
+  summarise(median=median(rel_abund), .groups="drop") %>%
+  group_by(taxon) %>%
+  summarise(pool = max(median) < 3,
+            median = median(median),
+            .groups="drop")
+
+inner_join(taxon_rel_abund, taxon_pool, by="taxon") %>%
+  mutate(taxon = if_else(pool, "Other", taxon)) %>%
+  group_by(sample_id, nationality, taxon) %>%
+  summarise(rel_abund = sum(rel_abund),
+            median = min(median),
+            .groups="drop") %>%
+  mutate(taxon = factor(taxon),
+         taxon = fct_reorder(taxon, median, .desc=FALSE)) %>%
+  ggboxplot(
+    x = "nationality",
+    y = "rel_abund",
+    color = "nationality", palette =c("green", "blue", "red")) +
+  theme_classic() +
+  labs(x = NULL, 
+       y = "Relative abundance", 
+       subtitle = "Relative abundance boxplot",
+       color = NULL) +
+  theme(axis.text.x = element_markdown(angle = 0, hjust = 1, vjust = 1),
+        axis.text.y = element_markdown(),
+        legend.text = element_markdown(),
+        legend.key.size = unit(12, "pt"),
+        panel.background = element_blank(),
+        panel.grid.major.y =  element_line(colour = "lightgray", size = 0.1),
+        panel.border = element_blank()) +
+  guides(fill = guide_legend(ncol=1) +
+  scale_x_continuous(expand = c(0, 0)))
+
+
+#####################
+
+taxon_rel_abund <- otu_rel_abund %>%
+  filter(level=="genus",
+         !grepl(".*unassigned.*|.*nclassified.*|.*ncultured.*",taxon)) %>%
+  group_by(sex, sample_id, taxon) %>%
+  summarise(rel_abund = 100*sum(rel_abund), .groups="drop") %>%
+  mutate(taxon = str_replace(taxon, "(.*)_unclassified", "Unclassified<br>*\\1*"),
+         taxon = str_replace(taxon, "^$", "*\\1*"),
+         taxon = str_replace(taxon, "_", " "))
+
+
+taxon_pool <- taxon_rel_abund %>%
+  group_by(sex, taxon) %>%
+  summarise(median=median(rel_abund), .groups="drop") %>%
+  group_by(taxon) %>%
+  summarise(pool = max(median) < 3,
+            median = median(median),
+            .groups="drop")
+
+inner_join(taxon_rel_abund, taxon_pool, by="taxon") %>%
+  mutate(taxon = if_else(pool, "Other", taxon)) %>%
+  group_by(sample_id, sex, taxon) %>%
+  summarise(rel_abund = sum(rel_abund),
+            median = min(median),
+            .groups="drop") %>%
+  mutate(taxon = factor(taxon),
+         taxon = fct_reorder(taxon, median, .desc=FALSE)) %>%
+  ggboxplot(
+    x = "sex",
+    y = "rel_abund",
+    color = "sex", palette =c("green", "blue", "red")) +
+  theme_classic() +
+  labs(x = NULL, 
+       y = "Relative abundance", 
+       subtitle = "Relative abundance boxplot",
+       color = NULL) +
+  theme(axis.text.x = element_markdown(angle = 0, hjust = 1, vjust = 1),
+        axis.text.y = element_markdown(),
+        legend.text = element_markdown(),
+        legend.key.size = unit(12, "pt"),
+        panel.background = element_blank(),
+        panel.grid.major.y =  element_line(colour = "lightgray", size = 0.1),
+        panel.border = element_blank()) +
+  guides(fill = guide_legend(ncol=1) +
+  scale_x_continuous(expand = c(0, 0)))
+
+#####################
+
+taxon_rel_abund <- otu_rel_abund %>%
+  filter(level=="genus",
+         !grepl(".*unassigned.*|.*nclassified.*|.*ncultured.*",taxon)) %>%
+  group_by(bmi, sample_id, nationality, taxon) %>%
+  summarise(rel_abund = 100*sum(rel_abund), .groups="drop") %>%
+  mutate(taxon = str_replace(taxon, "(.*)_unclassified", "Unclassified<br>*\\1*"),
+         taxon = str_replace(taxon, "^$", "*\\1*"),
+         taxon = str_replace(taxon, "_", " "))
+
+
+taxon_pool <- taxon_rel_abund %>%
+  group_by(bmi, nationality, taxon) %>%
+  summarise(median=median(rel_abund), .groups="drop") %>%
+  group_by(taxon) %>%
+  summarise(pool = max(median) < 3,
+            median = median(median),
+            .groups="drop")
+
+inner_join(taxon_rel_abund, taxon_pool, by="taxon") %>%
+  mutate(taxon = if_else(pool, "Other", taxon)) %>%
+  group_by(sample_id, bmi, nationality, taxon) %>%
+  summarise(rel_abund = sum(rel_abund),
+            median = min(median),
+            .groups="drop") %>%
+  mutate(taxon = factor(taxon),
+         taxon = fct_reorder(taxon, median, .desc=FALSE)) %>%
+  ggboxplot(
+    x = "bmi",
+    y = "rel_abund",
+    color = "nationality", palette =c("green", "blue", "red")) +
+  theme_classic() +
+  labs(x = NULL, 
+       y = "Relative abundance", 
+       subtitle = "Relative abundance boxplot",
+       color = NULL) +
+  theme(axis.text.x = element_markdown(angle = 0, hjust = 1, vjust = 1),
+        axis.text.y = element_markdown(),
+        legend.text = element_markdown(),
+        legend.key.size = unit(12, "pt"),
+        panel.background = element_blank(),
+        panel.grid.major.y =  element_line(colour = "lightgray", size = 0.1),
+        panel.border = element_blank()) +
+  guides(fill = guide_legend(ncol=1) +
+  scale_x_continuous(expand = c(0, 0))) +
+  theme(strip.background = element_rect(colour = "lightblue", fill = "lightblue"))
+
+#####################
+
+
+taxon_rel_abund <- otu_rel_abund %>%
+  filter(level=="genus",
+         !grepl(".*unassigned.*|.*nclassified.*|.*ncultured.*",taxon)) %>%
+  group_by(bmi, sample_id, nationality, taxon) %>%
+  summarise(rel_abund = 100*sum(rel_abund), .groups="drop") %>%
+  mutate(taxon = str_replace(taxon, "(.*)_unclassified", "Unclassified<br>*\\1*"),
+         taxon = str_replace(taxon, "^$", "*\\1*"),
+         taxon = str_replace(taxon, "_", " "))
+
+
+taxon_pool <- taxon_rel_abund %>%
+  group_by(bmi, nationality, taxon) %>%
+  summarise(median=median(rel_abund), .groups="drop") %>%
+  group_by(taxon) %>%
+  summarise(pool = max(median) < 3,
+            median = median(median),
+            .groups="drop")
+
+inner_join(taxon_rel_abund, taxon_pool, by="taxon") %>%
+  mutate(taxon = if_else(pool, "Other", taxon)) %>%
+  group_by(sample_id, bmi, nationality, taxon) %>%
+  summarise(rel_abund = sum(rel_abund),
+            median = min(median),
+            .groups="drop") %>%
+  mutate(taxon = factor(taxon),
+         taxon = fct_reorder(taxon, median, .desc=FALSE)) %>%
+  ggboxplot(
+    x = "bmi",
+    y = "rel_abund",
+    color = "bmi", palette =c("green", "blue", "red")) +
+  theme_classic() +
+  labs(x = NULL, 
+       y = "Relative abundance", 
+       subtitle = "Relative abundance boxplot",
+       color = NULL) +
+  theme(axis.text.x = element_markdown(angle = 0, hjust = 1, vjust = 1),
+        axis.text.y = element_markdown(),
+        legend.text = element_markdown(),
+        legend.key.size = unit(12, "pt"),
+        panel.background = element_blank(),
+        panel.grid.major.y =  element_line(colour = "lightgray", size = 0.1),
+        panel.border = element_blank()) +
+  guides(fill = guide_legend(ncol=1) +
+  scale_x_continuous(expand = c(0, 0))) +
+  facet_grid(~ nationality) +
+  theme(strip.background = element_rect(colour = "lightblue", fill = "lightblue"))
+
+#####################
+library(microbial)
+
+plotalpha(ps_raw, group = "nationality") +
+  theme_test() + labs(x="Sample", y="Relative Abundance", subtitle = "Using microbial package", color = NULL)
+
+plotalpha(ps_raw, group = "bmi_group") +
+  theme_test() + labs(x="Sample", y="Relative Abundance", subtitle = "Using microbial package", color = NULL)
+
+#####################

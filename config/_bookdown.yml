@@ -1,0 +1,26 @@
+book_filename: "bs4-book-template"
+new_session: true
+before_chapter_script: "common.R"
+after_chapter_script:
+delete_merged_file: true
+language:
+  label:
+    fig: 'Figure '
+    tab: 'Table '
+  ui:
+    edit: Edit
+    chapter_name: 'Chapter '
+    appendix_name: 'Appendix '
+
+output_dir: "gitbook"
+
+rmd_files:
+  html: 
+    - index.Rmd
+    - abstract.Rmd
+    - intro.Rmd
+  latex: 
+    - index.Rmd
+    - abstract.Rmd
+    - intro.Rmd
+

@@ -25,6 +25,7 @@ description: |
   | Systematic microbiome data analysis with Snakemake workflows.
 ---
 
+# Microbiome Data Visualization
 
 <div id="main-container">
 
@@ -36,6 +37,17 @@ description: |
 <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;700&display=swap" rel="stylesheet">
 
+
+```{css}
+body h1 { margin-top: 1.8em; font-size: 2.0em; }
+body h2 { margin-top: 1.8em; font-size: 2.0em; }
+body h3 { margin-top: 1.8em; font-size: 1.6em; }
+body h4 { margin-top: 1.8em; font-size: 1.2em; }
+body h5 { margin-top: 1.8em; font-size: 1.0em; }
+```
+
+## Set global parameters
+
 ```{r globalsetup, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(
   echo  =FALSE,
@@ -45,13 +57,17 @@ knitr::opts_chunk$set(
   comment  =NA,
   fig.path='./figures/',
   fig.show='asis',
-  dev  ='png',
+  dev  ='svg',
   fig.align='center',
   out.width  ="70%",
   fig.width  =7,
   fig.asp  =0.7,
   fig.show  ="asis"
 )
+```
+
+## Import libraries
+```{r libraries}
 suppressPackageStartupMessages(library(tidyverse))
 library(schtools)
 library(tools)
@@ -64,28 +80,19 @@ library(vegan)
 library(phyloseq)
 library(microbiome)
 
-
 # load("data/processed_objects.rda", verbose=TRUE)
 ```
 
-```{css}
-body h1 { margin-top: 1.8em; font-size: 2.0em; }
-body h2 { margin-top: 1.8em; font-size: 2.0em; }
-body h3 { margin-top: 1.8em; font-size: 1.6em; }
-body h4 { margin-top: 1.8em; font-size: 1.2em; }
-body h5 { margin-top: 1.8em; font-size: 1.0em; }
-```
 
 
-# Microbiome Data Visualization
 
-## Get a public 16S-demo dataset
+
+## Import test dataset
 Using `dietswap` from `microbiome` package
 ```{r data}
 library(microbiome)
 data("dietswap", package = "microbiome")
 ps <- dietswap
-ps
 ```
 
 
@@ -107,7 +114,6 @@ df_status(df, print_results = FALSE) %>%
 ```
 
 
-
 ## Frequency distributions for categoric variables
 ```{r freq_catvars}
 library(funModeling)
@@ -127,7 +133,8 @@ correlation_table(df, "sex")
 ## Boxplot
 ```{r boxplot}
 library(funModeling)
-plotar(df, input = c("sex", "nationality"), target="sex", plot_type="boxplot")
+plotar(df, input = c("sex"), target="bmi_group
+       ", plot_type="boxplot")
 ```
 
 ## Density histogram
@@ -136,20 +143,51 @@ library(funModeling)
 plotar(df, input = c("sex", "nationality"), target="sex", plot_type="histdens")
 ```
 
+# (PART) MACHINE LEARNING {-}
+# Measuring model performance
 
-# Predictive model performance
+![](images/gain_vs_roc.svg){width=100%}
 
-## Gain and lift performance curve
-Dataset: `heart_disease` from `funModeling`
-```{r glm}
+## Cumulative Gains Charts with `funModeling`
+
+Dataset: Heart disease dataset from the `funModeling` R package
+
+### Install and load the required packages:
+
+```{r cumm_gains}
+if(!require("funModeling")){devtools::install_github("pablo14/funModeling")}
+suppressPackageStartupMessages(library("funModeling"))
+
+if(!require("tidyverse")){install.packages("pablo14/tidyverse")}
+suppressPackageStartupMessages(library("tidyverse"))
+```
+
+### Load dataset and examine its structure
+```{r}
+library(funModeling)
+data(heart_disease, package = "funModeling")
+df <- heart_disease
+
+df_status(df, print_results = FALSE) %>% 
+  select(variable, type, unique, p_zeros) %>% tibble::tibble()
+```
+
+### Create machine learning model
+```{r glm_model}
 library(funModeling)
 
-# Create machine learning model and get its scores for positive case 
-fit_glm=glm(has_heart_disease ~ age + oldpeak, data=heart_disease, family = binomial)
-heart_disease$score=predict(fit_glm, newdata=heart_disease, type='response')
+fit_glm=glm(has_heart_disease ~ age + oldpeak, data=df2, family = binomial)
+```
 
-# Calculate performance metrics
-gain_lift(data=heart_disease, score='score', target='has_heart_disease')
+
+### Get the scores for positive case
+```{r scores}
+df2$score=predict(fit_glm, newdata=df2, type='response')
+```
+
+### Calculate performance metrics
+```{r perfometrics}
+gain_lift(data=df2, score='score', target='has_heart_disease')
 ```
 
 # Coordinate plot: Profile mean clusters
@@ -158,7 +196,7 @@ coord_plot(data=mtcars, group_var="cyl", group_func=median, print_table=TRUE)
 ```
 
 
-# Snakemake workflow
+# Visualization Snakemake workflow
 
 
 ![](dags/rulegraph.svg)
@@ -199,7 +237,6 @@ otutable <- otutable %>%
   column_to_rownames("Sample")
 
 ## Getting Bray-`Curtis` distances
-
 bray <- avgdist(otutable, dmethod="bray", sample=1776) %>%
   as.matrix() %>%
   as_tibble(rownames = "A") %>%
@@ -254,6 +291,14 @@ inner_join(bray, jaccard, by=c("A", "B")) %>%
 
 Heatmap without sample annotation
 ```{r microvizhtmp}
+library(tidyverse)
+library(microViz)
+library(phyloseq)
+library(microbiome)
+
+data("dietswap", package = "microbiome")
+ps <- dietswap
+
 ps %>%
   ps_mutate(nationality = as.character(nationality)) %>%
   tax_transform("log2", add = 1, chain = TRUE) %>%
@@ -263,6 +308,7 @@ ps %>%
     colors = heat_palette(palette = viridis::turbo(11)),
     row_names_side = "left", row_dend_side = "right", sample_side = "bottom",
   )
+
 ```
 
 Heatmap with sample annotation
@@ -270,7 +316,11 @@ Heatmap with sample annotation
 library(tidyverse)
 library(microViz)
 library(phyloseq)
-data("dietswap")
+library(microbiome)
+
+data("dietswap", package = "microbiome")
+ps <- dietswap
+
 htmp <- ps %>%
   ps_mutate(nationality = as.character(nationality)) %>%
   tax_transform("log2", add = 1, chain = TRUE) %>%
@@ -293,20 +343,70 @@ ComplexHeatmap::draw(
 
 ```
 
+```{r}
+library(tidyverse)
+library(microViz)
+library(phyloseq)
+library(microbiome)
+
+data("dietswap", package = "microbiome")
+ps <- dietswap
+
+ps %>%
+  ps_mutate(nationality = as.character(nationality)) %>%
+  tax_transform("log2", add = 1, chain = TRUE) %>%
+  comp_heatmap(
+    taxa = tax_top(ps, n = 30), grid_col = NA, name = "Log2p",
+    taxon_renamer = function(x) stringr::str_remove(x, " [ae]t rel."),
+    colors = heat_palette(palette = viridis::turbo(11)),
+    row_names_side = "left", row_dend_side = "right", sample_side = "bottom",
+  )
+
+# ggsave("figures/microviz_wo_heatmap.png", height=4, width=8, device="png")
+ggsave("figures/microviz_wo_heatmap.svg", height=4, width=8, device="svg")
 
 
-<br><br>
+library(tidyverse)
+library(microViz)
+library(phyloseq)
+library(microbiome)
+
+data("dietswap", package = "microbiome")
+ps <- dietswap
+
+htmp <- ps %>%
+  ps_mutate(nationality = as.character(nationality)) %>%
+  tax_transform("log2", add = 1, chain = TRUE) %>%
+  comp_heatmap(
+    taxa = tax_top(ps, n = 30), grid_col = NA, name = "Log2p",
+    taxon_renamer = function(x) stringr::str_remove(x, " [ae]t rel."),
+    colors = heat_palette(palette = viridis::turbo(11)),
+    row_names_side = "left", row_dend_side = "right", sample_side = "bottom",
+    sample_anno = sampleAnnotation(
+    Nationality = anno_sample_cat(
+    var = "nationality", col = c(AAM = "red", AFR = "green"),
+    box_col = NA, legend_title = "Nationality", size = grid::unit(4, "mm")
+    )
+  )
+)
+ComplexHeatmap::draw(
+  object = htmp, annotation_legend_list = attr(htmp, "AnnoLegends"),
+  merge_legends = TRUE
+)
+
+ggsave("figures/microviz_w_heatmap.png", height=4, width=8, device="png")
+ggsave("figures/microviz_w_heatmap.svg", height=4, width=8, device="svg")
+
+```
 
 # Jitter plots
 ![](figures/q2r_jitterplot.svg)
 
-<br><br>
 
 # Line plots
 ![](figures/q2r_lineplot.svg)
 
 
-<br><br>
 
 # PCoA ordination
 ![](figures/q2r_pcoa.svg)
@@ -346,22 +446,6 @@ ComplexHeatmap::draw(
 <br><hr width=100%><br>
 
 # Appendix {-}
-
-## Project main tree
-```{bash, include=FALSE}
-bash workflow/scripts/tree.sh
-```
-
-```{bash treeimg}
-cat results/project_tree.txt
-```
-
-<br>
-
-![](images/smkreport/screenshot.png)
-
-<br>
-
 
 ## Troubleshooting of FAQs
 <ol>
