@@ -1,0 +1,33 @@
+[submodule "bar-chart"]
+	path = bar-chart
+	url = https://github.com/tmbuza/bar-chart.git
+[submodule "heatmap"]
+	path = heatmap
+	url = https://github.com/tmbuza/heatmap.git
+[submodule "scatter-plot"]
+	path = scatter-plot
+	url = https://github.com/tmbuza/scatter-plot.git
+[submodule "boxplot"]
+	path = boxplot
+	url = https://github.com/tmbuza/boxplot.git
+[submodule "box-plot"]
+	path = box-plot
+	url = https://github.com/tmbuza/box-plot.git
+[submodule "ordination"]
+	path = ordination
+	url = https://github.com/tmbuza/ordination.git
+[submodule "histogram"]
+	path = histogram
+	url = https://github.com/tmbuza/histogram.git
+[submodule "density-plot"]
+	path = density-plot
+	url = https://github.com/tmbuza/density-plot.git
+[submodule "violin"]
+	path = violin
+	url = https://github.com/tmbuza/violin.git
+[submodule "line-plot"]
+	path = line-plot
+	url = https://github.com/tmbuza/line-plot.git
+[submodule "network-viz"]
+	path = network-viz
+	url = https://github.com/tmbuza/network-viz.git
