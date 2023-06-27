@@ -108,6 +108,10 @@ download.file("https://docs.qiime2.org/2018.4/data/tutorials/moving-pictures/cor
 # R -e 'remotes::install_github("pablo14/funModeling")'
 # R -e 'remotes::install_github("cran/cgwtools")'
 # R -e 'remotes::install_github("jeroen/jsonlite")'
+# R -e 'remotes::install_github("Russel88/MicEco")'
+# R -e 'remotes::install_github("guokai8/microbial")'
+# R -e 'devtools::install_github("guokai8/microbial")'
+
 
 # R -e '(if (!"remotes" %in% installed.packages()[,"Package"]) install.packages("remotes"))'
 # R -e '(Sys.setenv(R_REMOTES_STANDALONE = "true"))'
