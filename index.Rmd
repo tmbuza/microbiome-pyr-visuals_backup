@@ -68,17 +68,33 @@ knitr::opts_chunk$set(
 
 ## Import libraries
 ```{r libraries}
+if(!require("tidyverse")) {BiocManager::install("tidyverse")}
 suppressPackageStartupMessages(library(tidyverse))
+if(!require("schtools")) {BiocManager::install("schtools")}
 library(schtools)
+if(!require("tools")) {BiocManager::install("tools")}
 library(tools)
+if(!require("yaml")) {BiocManager::install("yaml")}
 library(yaml)
+if(!require("rhdf5")) {BiocManager::install("rhdf5")}
 library(rhdf5)
+if(!require("Matrix")) {BiocManager::install("Matrix")}
 library(Matrix)
+if(!require("qiime2R")) {devtools::install_github("jbisanz/qiime2R")}
 library(qiime2R)
+if(!require("microViz")) {install.packages("microViz",repos = c(davidbarnett = "https://david-barnett.r-universe.dev", getOption("repos")))}
 library(microViz)
+if(!require("funModeling")){devtools::install_github("pablo14/funModeling")}
+suppressPackageStartupMessages(library("funModeling"))
+if(!require("vegan")) {BiocManager::install("vegan")}
 library(vegan)
+if(!require("phyloseq")) {BiocManager::install("phyloseq")}
 library(phyloseq)
+if(!require("microbiome")) {BiocManager::install("microbiome")}
 library(microbiome)
+if(!require("ComplexHeatmap")) {BiocManager::install("ComplexHeatmap")}
+library(ComplexHeatmap)
+
 
 # load("data/processed_objects.rda", verbose=TRUE)
 ```
@@ -133,8 +149,7 @@ correlation_table(df, "sex")
 ## Boxplot
 ```{r boxplot}
 library(funModeling)
-plotar(df, input = c("sex"), target="bmi_group
-       ", plot_type="boxplot")
+plotar(df, input = c("sex"), target="bmi_group", plot_type="boxplot")
 ```
 
 ## Density histogram
@@ -152,16 +167,6 @@ plotar(df, input = c("sex", "nationality"), target="sex", plot_type="histdens")
 
 Dataset: Heart disease dataset from the `funModeling` R package
 
-### Install and load the required packages:
-
-```{r cumm_gains}
-if(!require("funModeling")){devtools::install_github("pablo14/funModeling")}
-suppressPackageStartupMessages(library("funModeling"))
-
-if(!require("tidyverse")){install.packages("pablo14/tidyverse")}
-suppressPackageStartupMessages(library("tidyverse"))
-```
-
 ### Load dataset and examine its structure
 ```{r}
 library(funModeling)
@@ -176,18 +181,18 @@ df_status(df, print_results = FALSE) %>%
 ```{r glm_model}
 library(funModeling)
 
-fit_glm=glm(has_heart_disease ~ age + oldpeak, data=df2, family = binomial)
+fit_glm=glm(has_heart_disease ~ age + oldpeak, data=df, family = binomial)
 ```
 
 
 ### Get the scores for positive case
 ```{r scores}
-df2$score=predict(fit_glm, newdata=df2, type='response')
+df$score=predict(fit_glm, newdata=df, type='response')
 ```
 
 ### Calculate performance metrics
-```{r perfometrics}
-gain_lift(data=df2, score='score', target='has_heart_disease')
+```{r perfometrics, message=FALSE, warning=FALSE}
+gain_lift(data=df, score='score', target='has_heart_disease')
 ```
 
 # Coordinate plot: Profile mean clusters
@@ -206,7 +211,7 @@ coord_plot(data=mtcars, group_var="cyl", group_func=median, print_table=TRUE)
 
 
 ## Using `qiime2R`
-```{r taxahtmp}
+```{r taxahtmp, eval=FALSE, include=FALSE}
 metadata<-read_q2metadata("data/sample_metadata.tsv")
 ASVs<-read_qza("data/feature_table.qza")$data
 taxonomy<-read_qza("data/taxonomy.qza")$data %>% parse_taxonomy()
@@ -362,7 +367,7 @@ ps %>%
     row_names_side = "left", row_dend_side = "right", sample_side = "bottom",
   )
 
-# ggsave("figures/microviz_wo_heatmap.png", height=4, width=8, device="png")
+ggsave("figures/microviz_wo_heatmap.png", height=4, width=8, device="png")
 ggsave("figures/microviz_wo_heatmap.svg", height=4, width=8, device="svg")
 
 
